@@ -4081,7 +4081,14 @@
           case '$':
             return cm.lastLine();
           case '\'':
-            var mark = cm.state.vim.marks[inputStream.next()];
+            var markName = inputStream.next();
+            if (markName == '\'') {
+              var history = cm.doc.history.done;
+              var event = history[history.length - 2];
+              return event && event.ranges && event.ranges[0].head && event.ranges[0].head.line;
+            }
+
+            var mark = cm.state.vim.marks[markName];
             if (mark && mark.find()) {
               return mark.find().line;
             }
